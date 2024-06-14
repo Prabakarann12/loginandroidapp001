@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'FindPageUni.dart';
-import 'package:geolocator/geolocator.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'SearchPage.dart';
-
-const kGoogleApiKey = "AIzaSyC7dLmibg2-ZNrhWu8KLKGaHr97q38HkPM";
-
 
 void main() {
   runApp(const MainApp());
@@ -52,20 +48,8 @@ class _SearchFilterPageState extends State<SearchFilterPage> {
   bool _isToursSelected = false;
   bool _isApplyFilterSelected = false;
   double _budgetRange = 0;
-  Position? _currentPosition;
 
 
-  final List<Map<String, String>> items = [
-    {'title': 'Canada'},
-    {'title': 'UK'},
-    {'title': 'USA'},
-    {'title': 'Russia'},
-    {'title': 'Australia'},
-    {'title': 'Ukraine'},
-    {'title': 'India'},
-    {'title': 'Singapore'},
-    {'title': 'India'},
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -83,64 +67,18 @@ class _SearchFilterPageState extends State<SearchFilterPage> {
       }
     });
   }
-
-  Future<void> _onCurrentLocationSelected() async {
-
-  }
-
-
-  void _onSearchLocationSelected() async {
-    final selected = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Location'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: List.generate(items.length, (index) {
-                return CheckboxListTile(
-                  title: Text(
-                    items[index]['title']!,
-                    style: TextStyle(color: Colors.black), // Title text color
-                  ),
-                  activeColor: Colors.black, // Checkbox color
-                  value: selectedValues.contains(items[index]['title']),
-                  onChanged: (bool? value) {
-                    setState(() {
-                      if (value != null && value) {
-                        selectedValues.add(items[index]['title']!);
-                      } else {
-                        selectedValues.remove(items[index]['title']!);
-                      }
-                    });
-                  },
-                );
-              }),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop(selectedValues);
-              },
-            ),
-          ],
-        );
-      },
-    );
-
-    // Update button value
+  void _onCurrentLocationSelected() {
     setState(() {
-      // You can update your button value here
-      print('Selected Values: $selectedValues');
+      _isCurrentLocationSelected = !_isCurrentLocationSelected;
+
     });
   }
 
-// Initialize the list to store selected values
-  List<String> selectedValues = [];
-
-
+  void _onSearchLocationSelected() {
+    setState(() {
+      _isSearchLocationSelected = !_isSearchLocationSelected;
+    });
+  }
 
   void _onTodaySelected() {
     setState(() {
@@ -260,12 +198,7 @@ class _SearchFilterPageState extends State<SearchFilterPage> {
     setState(() {
       _isApplyFilterSelected = !_isApplyFilterSelected;
     });
-    _applyFilters();
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => SearchPage()),
-    );// Add this line to apply filters and store data
+    _applyFilters(); // Add this line to apply filters and store data
   }
   void _applyFilters() async {
     // Collect filter data
@@ -286,9 +219,6 @@ class _SearchFilterPageState extends State<SearchFilterPage> {
       'festivals': _isFestivalsSelected,
       'tours': _isToursSelected,
       'budgetRange': _budgetRange,
-      'latitude': _currentPosition?.latitude,
-      'longitude': _currentPosition?.longitude,
-
     };
 
     // Send data to the server
@@ -545,15 +475,15 @@ class _SearchFilterPageState extends State<SearchFilterPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   const Text(
-                    "100k",
+                    "0",
                     style: TextStyle(fontSize: 16),
                   ),
                   Expanded(
                     child: Slider(
                       value: _budgetRange,
-                      min: 100,
-                      max: 10000,
-                      divisions: 1000,
+                      min: 0,
+                      max: 100,
+                      divisions: 100,
                       label: _budgetRange.round().toString(),
                       activeColor: Colors.green,
                       onChanged: (double value) {
@@ -564,7 +494,7 @@ class _SearchFilterPageState extends State<SearchFilterPage> {
                     ),
                   ),
                   const Text(
-                    "1000k",
+                    "100",
                     style: TextStyle(fontSize: 16),
                   ),
                 ],
