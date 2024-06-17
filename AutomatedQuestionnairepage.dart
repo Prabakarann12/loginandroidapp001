@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 void main() {
   runApp(const MainApp());
@@ -18,78 +19,86 @@ class MainApp extends StatelessWidget {
 }
 
 class Automatedquestionnairepage extends StatefulWidget {
+  get userIdProfile => userIdProfile;
+
+  int get userId =>12 ;
+
   @override
   _AutomatedquestionnairepageState createState() => _AutomatedquestionnairepageState();
 }
 
 class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage> {
-  double _budgetRange = 50.0; // Define the budgetRange variable
+  double _budgetRange = 0;
+  double _budgetRange1 = 0;
   String? _selectedProvince;
-  String? _selectedLength; // Define the selected province variable
+  String? _selectedLength;
   bool _isChecked = false;
-  int _selectedIndex = 0;
+  TextEditingController _studyFieldController = TextEditingController();
+  TextEditingController _additionalCriteriaController = TextEditingController();
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  Future<void> _submitData() async {
+    try {
+      final url = Uri.parse('https://syfer001testing.000webhostapp.com/cloneapi/Automatedquestionnairepg.php');
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {
+          'user_id': widget.userId.toString(),
+          'budget_range': _budgetRange.toString(),
+          'province': _selectedProvince ?? '',
+          'study_field': _studyFieldController.text,
+          'program_length': _selectedLength ?? '',
+          'scholarships_available': _isChecked ? '1' : '0',
+          'application_fee': _budgetRange1.toString(),
+          'additional_criteria': _additionalCriteriaController.text,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        // Handle the response data as needed
+      } else {
+        // Handle the failure
+      }
+    } catch (e) {
+      // Handle the error
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Image.asset(
-              'assets/A&Qmainpage.png',
-              width: 100,
-              height: 25,
-            ),
-            IconButton(
-              icon: const Icon(Icons.menu_rounded, color: Colors.grey),
-              onPressed: () {
-                // Add your onPressed logic here
-              },
-            ),
-            Text(
-              "Automated Questionnaire",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 18.0,
-              ),
-            ),
-          ],
-        ),
+        title: Text("Automated Questionnaire"),
         backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.menu_rounded, color: Colors.grey),
+            onPressed: () {
+              // Add your onPressed logic here
+            },
+          ),
+        ],
       ),
-
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // Align the column to the start
-          children: <Widget>[
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Tuition Budget",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18.0,
-                  ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "Tuition Budget",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18.0,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     "0",
@@ -116,22 +125,16 @@ class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage>
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Text(
-                "province",
+              SizedBox(height: 20),
+              Text(
+                "Province",
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w600,
                   fontSize: 18.0,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-              child: DropdownButtonFormField<String>(
+              DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Select Province',
@@ -143,7 +146,7 @@ class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage>
                   });
                 },
                 items: <String>[
-                  'Ontario ',
+                  'Ontario',
                   'Manitoba',
                   'Nova Scotia',
                   'Alberta',
@@ -155,11 +158,8 @@ class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage>
                   );
                 }).toList(),
               ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Text(
+              SizedBox(height: 20),
+              Text(
                 "Study Field",
                 style: TextStyle(
                   color: Colors.black,
@@ -167,31 +167,23 @@ class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage>
                   fontSize: 18.0,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-              child: TextField(
+              TextField(
+                controller: _studyFieldController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Enter your study Field',
+                  labelText: 'Enter your study field',
                 ),
               ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Text(
-                "Length Of Programe",
+              SizedBox(height: 20),
+              Text(
+                "Length Of Program",
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w600,
                   fontSize: 18.0,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-              child: DropdownButtonFormField<String>(
+              DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Select Program Length',
@@ -202,7 +194,7 @@ class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage>
                     _selectedLength = newValue;
                   });
                 },
-                items: <String>['1 Year ', '2 Year', '3 Year ', '4 Year', '5 Year']
+                items: <String>['1 Year', '2 Year', '3 Year', '4 Year', '5 Year']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -210,14 +202,16 @@ class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage>
                   );
                 }).toList(),
               ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-              child: Row(
+              SizedBox(height: 20),
+              Text(
+                "Checkbox",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18.0,
+                ),
+              ),
+              Row(
                 children: [
                   Checkbox(
                     value: _isChecked,
@@ -226,30 +220,22 @@ class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage>
                         _isChecked = value!;
                       });
                     },
+                    activeColor: Colors.cyan,
                   ),
                   Text('Scholarships Available'),
                 ],
               ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Application Fee",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18.0,
-                  ),
+              SizedBox(height: 20),
+              Text(
+                "Application Fee",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18.0,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     "0",
@@ -257,15 +243,15 @@ class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage>
                   ),
                   Expanded(
                     child: Slider(
-                      value: _budgetRange,
+                      value: _budgetRange1,
                       min: 0,
                       max: 100,
                       divisions: 100,
-                      label: _budgetRange.round().toString(),
+                      label: _budgetRange1.round().toString(),
                       activeColor: Colors.green,
                       onChanged: (double value) {
                         setState(() {
-                          _budgetRange = value;
+                          _budgetRange1 = value;
                         });
                       },
                     ),
@@ -276,11 +262,8 @@ class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage>
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Text(
+              SizedBox(height: 20),
+              Text(
                 "Additional Criteria",
                 style: TextStyle(
                   color: Colors.black,
@@ -288,257 +271,29 @@ class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage>
                   fontSize: 18.0,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-              child: TextField(
+              TextField(
+                controller: _additionalCriteriaController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Enter any Additional Criteria',
+                  labelText: 'Enter any additional criteria',
                 ),
               ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Text(
-                "Matched Programe",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18.0,
-                ),
-              ),
-            ),
-            SizedBox(height: 10,),
-            Center(
-              child: Container(
-                height: 200,
-                width: 380,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 2),
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Card(
-                  color: Colors.white,
-                  elevation: 0,
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _submitData,
+                child: const Text('Submit'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.cyan,
+                  minimumSize: Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding:  EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(width: 0,height: 0,), // Space between the icon and text
-                                  Text(
-                                    "Study Abroad Program 1",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 23.0,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              SizedBox(height: 5),
-                              Text("School: University X",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13.0,
-                                ),
-                                textAlign: TextAlign.center, // Center the text
-                              ),
-                              SizedBox(height: 1),
-                              Text("Location: Canada",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13.0,
-                                ),
-                                textAlign: TextAlign.center, // Center the text
-                              ),
-                              SizedBox(height: 4),
-                              Text("Brief Discription: This programe offer was unique opportunity...",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13.0,
-                                ),
-                                textAlign: TextAlign.start, // Center the text
-                              ),
-                              SizedBox(height: 5),
-                              Align(
-                                alignment: Alignment.center,
-                                child: TextButton(
-                                  onPressed: () {
-                                  },
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: Colors.black,
-                                    foregroundColor: Colors.white,
-                                  ),
-                                  child: Text("View Details "),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 10,),
-            Center(
-              child: Container(
-                height: 200,
-                width: 380,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 2),
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Card(
-                  color: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding:  EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(width: 0,height: 0,), // Space between the icon and text
-                                  Text(
-                                    "Study Abroad Program 2",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 23.0,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              SizedBox(height: 5),
-                              Text("School: University y",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13.0,
-                                ),
-                                textAlign: TextAlign.center, // Center the text
-                              ),
-                              SizedBox(height: 1),
-                              Text("Location: Australia",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13.0,
-                                ),
-                                textAlign: TextAlign.center, // Center the text
-                              ),
-                              SizedBox(height: 4),
-                              Text("Brief Discription: Explore the vibrant culture and academic...",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13.0,
-                                ),
-                                textAlign: TextAlign.start, // Center the text
-                              ),
-                              SizedBox(height: 5),
-                              Align(
-                                alignment: Alignment.center,
-                                child: TextButton(
-                                  onPressed: () {
-
-                                  },
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: Colors.black,
-                                    foregroundColor: Colors.white,
-                                  ),
-                                  child: Text("View Details"),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, // Add this line
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        backgroundColor: Colors.white,
-        selectedLabelStyle: TextStyle(color: Colors.black),
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.black),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search, color: Colors.black),
-            label: 'Find',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite, color: Colors.black),
-            label: 'favorite',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.black),
-            label: 'Account',
-          ),
-        ],
-        selectedItemColor: Colors.black,
-      ),
-
     );
   }
 }
