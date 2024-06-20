@@ -5,7 +5,10 @@ import 'dart:convert';
 import 'SearchPage.dart';
 import 'FindPageUni.dart';
 import 'Drawerpageuni.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'NetworkPage.dart';
+import 'ConsultantsPage.dart';
+import 'CollegePage.dart';
+import 'SchoolPage.dart';
 
 
 class HomePageUni extends StatefulWidget {
@@ -49,7 +52,7 @@ class _HomePageUniState extends State<HomePageUni> {
         page = const NetworkPage();
         break;
       case 1:
-        page = const ConcultantsPage();
+        page =  ConsultantsPage();
         break;
       case 2:
         page = const AlumniPage();
@@ -377,7 +380,7 @@ class _HomePageUniState extends State<HomePageUni> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SearchPage()),
+                                      builder: (context) => SearchPage(fetchUserData(widget.userId))),
                                 );
                               },
                               color: Colors.black,
@@ -443,123 +446,7 @@ class _HomePageUniState extends State<HomePageUni> {
     );
   }
 }
-class NetworkPage extends StatelessWidget {
-  const NetworkPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    List<String> imagePaths = [
-      'assets/a.png',
-      'assets/b.png',
-      'assets/c.png',
-      'assets/d.png',
-      'assets/e.png',
-      'assets/f.png',
-      'assets/g.png',
-      'assets/h.png',
-    ];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Network',style: TextStyle(color: Colors.white),),
-        backgroundColor: Colors.black87,
-      ),
-      body: ListView.builder(
-        itemCount: imagePaths.length,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: const EdgeInsets.all(10),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(10),
-              leading: Image.asset(
-                imagePaths[index],
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-              ),
-              title: Text('Network Item $index'),
-              subtitle: Text('This is a description for item $index.'),
-              trailing: Icon(Icons.arrow_forward),
-              onTap: () {
-                // Handle card tap
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class ConcultantsPage extends StatelessWidget {
-  const ConcultantsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    List<String> imagePaths = [
-      'assets/a.png',
-      'assets/b.png',
-      'assets/c.png',
-      'assets/d.png',
-      'assets/e.png',
-      'assets/f.png',
-      'assets/g.png',
-      'assets/h.png',
-    ];
-
-    List<String> titles = [
-      'John wick',
-      'Robert.j',
-      'James Gunn',
-      'Ricky tales',
-      'Micky mose',
-      'Pick War',
-      'Leg piece',
-      'Apple Mac',
-    ];
-
-    List<String> subtitles = [
-      'mailto:jon.wick@gmail.com',
-      'mailto:robert.j@gmail.com',
-      'mailto:james.gunn@gmail.com',
-      'mailto:ricky.tales@gmail.com',
-      'mailto:micky.mose@gmail.com',
-      'mailto:pick.war@gmail.com',
-      'mailto:leg.piece@gmail.com',
-      'mailto:apple.mac@gmail.com',
-    ];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Concultants',style: TextStyle(color: Colors.white),),
-        backgroundColor: Colors.black87,
-      ),
-      body: ListView.builder(
-        itemCount: imagePaths.length,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: const EdgeInsets.all(10),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(10),
-              leading: Image.asset(
-                imagePaths[index],
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-              ),
-              title: Text(titles[index]),
-              subtitle: Text(subtitles[index]),
-              trailing: const Icon(Icons.arrow_forward),
-              onTap: () {
-                // Handle card tap
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
 class AlumniPage extends StatelessWidget {
   const AlumniPage({super.key});
 
@@ -581,185 +468,4 @@ class AlumniPage extends StatelessWidget {
     );
   }
 }
-
-class SchoolPage extends StatelessWidget {
-  const SchoolPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    List<String> imagePaths = [
-      'assets/mit.jpeg',
-      'assets/icl.jpg',
-      'assets/oxford-university.jpg',
-      'assets/hu.jpg',
-      'assets/uoc.jpeg',
-      'assets/su.jpeg',
-      'assets/eth.jpg',
-      'assets/nus.jpg',
-      'assets/ucl.jpg',
-      'assets/ciot.jpeg',
-    ];
-
-    List<String> titles = [
-      'Massachusetts Institute of Technology (MIT)',
-      'Imperial College London',
-      'University of Oxford',
-      'Harvard University',
-      'University of Cambridge',
-      'Stanford University',
-      'ETH Zurich (Swiss Federal Institute of Technology)',
-      'National University of Singapore (NUS)',
-      'University College London (UCL)',
-      'California Institute of Technology (Caltech)',
-    ];
-
-    List<String> subtitles = [
-      '77 Massachusetts Ave, Cambridge, MA 02139, United States',
-      'South Kensington, London SW7 2BU, United Kingdom',
-      'Oxford OX1 2JD, United Kingdom',
-      'Cambridge, MA 02138, United States',
-      'The Old Schools, Trinity Ln, Cambridge CB2 1TN, United Kingdom',
-      '450 Serra Mall, Stanford, CA 94305, United States',
-      'Rämistrasse 101, 8092 Zürich, Switzerland',
-      '21 Lower Kent Ridge Rd, Singapore 119077',
-      'Gower St, London WC1E 6BT, United Kingdom',
-      '1200 E California Blvd, Pasadena, CA 91125, United States',
-    ];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('School',style: TextStyle(color: Colors.white),),
-        backgroundColor: Colors.black87,
-      ),
-      body: ListView.builder(
-        itemCount: imagePaths.length,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: const EdgeInsets.all(10),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(10),
-              leading: Image.asset(
-                imagePaths[index],
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-              ),
-              title: Text(titles[index]),
-              subtitle: Text(subtitles[index]),
-              trailing: const Icon(Icons.arrow_forward),
-              onTap: () {
-                launchWebsite(index);
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void launchWebsite(int index) async {
-    List<String> websites = [
-      'https://web.mit.edu',
-      'https://www.imperial.ac.uk',
-      'https://www.ox.ac.uk',
-      'https://www.harvard.edu',
-      'https://www.cam.ac.uk',
-      'https://www.stanford.edu',
-      'https://ethz.ch',
-      'https://www.nus.edu.sg',
-      'https://www.ucl.ac.uk',
-      'https://www.caltech.edu',
-    ];
-
-    String url = websites[index];
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-}
-
-class CollegePage extends StatelessWidget {
-  const CollegePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    List<String> imagePaths = [
-      'assets/mit.jpeg',
-      'assets/icl.jpg',
-      'assets/oxford-university.jpg',
-      'assets/hu.jpg',
-      'assets/uoc.jpeg',
-      'assets/su.jpeg',
-      'assets/eth.jpg',
-      'assets/nus.jpg',
-      'assets/ucl.jpg',
-      'assets/ciot.jpeg',
-
-
-
-    ];
-
-    List<String> titles = [
-      'Massachusetts Institute of Technology (MIT) ',
-      'Imperial College London ',
-      'University of Oxford ',
-      'Harvard University ',
-      'University of Cambridge',
-      'Stanford University',
-      'ETH Zurich (Swiss Federal Institute of Technology)',
-      'National University of Singapore (NUS)',
-      'UCL (University College London)',
-      'California Institute of Technology (Caltech)',
-
-    ];
-
-    List<String> subtitles = [
-      'United States ',
-      'United Kingdom ',
-      'United Kingdom ',
-      'United States',
-      'United Kingdom',
-      'United States',
-      'Switzerland  ',
-      'Singapore ',
-      'United Kingdom',
-      'United States ',
-    ];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('College',style: TextStyle(color: Colors.white),),
-        backgroundColor: Colors.black87,
-
-      ),
-      body: ListView.builder(
-        itemCount: imagePaths.length,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: const EdgeInsets.all(10),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(10),
-              leading: Image.asset(
-                imagePaths[index],
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-              ),
-              title: Text(titles[index]),
-              subtitle: Text(subtitles[index]),
-              trailing: const Icon(Icons.arrow_forward),
-              onTap: () {
-                // Handle card tap
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-
 
