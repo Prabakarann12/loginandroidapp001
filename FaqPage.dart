@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'AutomatedQuestionnairepage.dart';
 
 void main() {
   runApp(const MainApp());
@@ -53,7 +54,7 @@ class _FaqPageState extends State<FaqPage> {
         _studyController.clear();
         _careerController.clear();
         _culturalController.clear();
-        _personalController.clear();// Print response from server
+        _personalController.clear();
         // Optionally, you can navigate to a success screen or handle the response here
       } else {
         print('Error: ${response.reasonPhrase}');
@@ -76,21 +77,25 @@ class _FaqPageState extends State<FaqPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
-            Text(
-              "HomePage Buttons",
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 18.0,
-              ),
-            ), SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child:TextButton(
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
+              child: Text(
+                "HomePage Buttons",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
+              child: TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => FaqPage()),
+                    MaterialPageRoute(builder: (context) => Automatedquestionnairepage()),
                   );
                 },
                 style: TextButton.styleFrom(
@@ -108,7 +113,7 @@ class _FaqPageState extends State<FaqPage> {
 
             SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0), // Adjust the horizontal padding as needed
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
               child: TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -129,7 +134,7 @@ class _FaqPageState extends State<FaqPage> {
             ),
             SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0), // Adjust the horizontal padding as needed
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
               child: TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -150,7 +155,7 @@ class _FaqPageState extends State<FaqPage> {
             ),
             SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0), // Adjust the horizontal padding as needed
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
               child: TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -171,7 +176,7 @@ class _FaqPageState extends State<FaqPage> {
             ),
             SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0), // Adjust the horizontal padding as needed
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
               child: TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -192,7 +197,7 @@ class _FaqPageState extends State<FaqPage> {
             ),
             SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0), // Adjust the horizontal padding as needed
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
               child: TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -213,7 +218,7 @@ class _FaqPageState extends State<FaqPage> {
             ),
             SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0), // Adjust the horizontal padding as needed
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
               child: TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -234,7 +239,7 @@ class _FaqPageState extends State<FaqPage> {
             ),
             SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0), // Adjust the horizontal padding as needed
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
               child: TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -255,7 +260,7 @@ class _FaqPageState extends State<FaqPage> {
             ),
             SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0), // Adjust the horizontal padding as needed
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
               child: TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -277,19 +282,21 @@ class _FaqPageState extends State<FaqPage> {
 
 
             const SizedBox(height: 10),
-            Text(
-              "Answering Study Abroad Goals",
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 18.0,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
+              child: Text(
+                "Answering Study Abroad Goals",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18.0,
+                ),
               ),
             ),
             const SizedBox(height: 10),
             Center(
               child: Container(
-                height: 770,
-                width: 420,
+                constraints: BoxConstraints(maxWidth: 420),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.black, width: 2),
                   borderRadius: BorderRadius.circular(15),
@@ -335,7 +342,9 @@ class _FaqPageState extends State<FaqPage> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25.0),
                             ),
-                            contentPadding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: MediaQuery.of(context).size.height * 0.02,
+                                horizontal: MediaQuery.of(context).size.width * 0.05),
                           ),
                         ),
                         SizedBox(height: 10),
@@ -359,7 +368,9 @@ class _FaqPageState extends State<FaqPage> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25.0),
                             ),
-                            contentPadding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: MediaQuery.of(context).size.height * 0.02,
+                                horizontal: MediaQuery.of(context).size.width * 0.05),
                           ),
                         ),
                         SizedBox(height: 10),
@@ -383,7 +394,9 @@ class _FaqPageState extends State<FaqPage> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25.0),
                             ),
-                            contentPadding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: MediaQuery.of(context).size.height * 0.02,
+                                horizontal: MediaQuery.of(context).size.width * 0.05),
                           ),
                         ),
                         SizedBox(height: 10),
@@ -406,7 +419,9 @@ class _FaqPageState extends State<FaqPage> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25.0),
                             ),
-                            contentPadding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: MediaQuery.of(context).size.height * 0.02,
+                                horizontal: MediaQuery.of(context).size.width * 0.05),
                           ),
                         ),
                         SizedBox(height: 10),
