@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'HomePageUni.dart';
+import 'SignInPage.dart';
 
 void main() {
   runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  const MainApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,26 +20,39 @@ class MainApp extends StatelessWidget {
 }
 
 class Automatedquestionnairepage extends StatefulWidget {
-  get userIdProfile => userIdProfile;
-
-  int get userId =>12 ;
+  final int userId = 12;
 
   @override
-  _AutomatedquestionnairepageState createState() => _AutomatedquestionnairepageState();
+  _AutomatedquestionnairepageState createState() =>
+      _AutomatedquestionnairepageState();
 }
 
 class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage> {
+  int _selectedIndex = 0;
   double _budgetRange = 0;
   double _budgetRange1 = 0;
   String? _selectedProvince;
   String? _selectedLength;
   bool _isChecked = false;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (index == 4) {
+        // Account button index
+      }
+      if (index == 1) {}
+      if (index == 0) {}
+    });
+  }
+
   TextEditingController _studyFieldController = TextEditingController();
   TextEditingController _additionalCriteriaController = TextEditingController();
 
   Future<void> _submitData() async {
     try {
-      final url = Uri.parse('https://syfer001testing.000webhostapp.com/cloneapi/Automatedquestionnairepg.php');
+      final url =
+      Uri.parse('https://syfer001testing.000webhostapp.com/cloneapi/Automatedquestionnairepg.php');
 
       final response = await http.post(
         url,
@@ -70,6 +84,8 @@ class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Automated Questionnaire"),
@@ -290,9 +306,187 @@ class _AutomatedquestionnairepageState extends State<Automatedquestionnairepage>
                   ),
                 ),
               ),
+              SizedBox(height: 10),
+              Container(
+                width: screenWidth >= 600 ? 600 : screenWidth - 40,
+                child: Card(
+                  color: Colors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    side: BorderSide(color: Colors.black, width: 2),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Study Abroad Program 1",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 22.0,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          "School: University X",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                        Text(
+                          "Location: Canada",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          "Brief Description: This programe offers a unique opportunity...",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Align(
+                          alignment: Alignment.center,
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignInPage(),
+                                ),
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: Text("View Details"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Container(
+                width: screenWidth >= 600 ? 600 : screenWidth - 40,
+                child: Card(
+                  color: Colors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    side: BorderSide(color: Colors.black, width: 2),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Study Abroad Program 2",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 22.0,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          "School: University Y",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                        Text(
+                          "Location: Australia",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          "Brief Description: Explore the vibrant culture and academic...",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Align(
+                          alignment: Alignment.center,
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignInPage(),
+                                ),
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: Text("View Details"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        backgroundColor: Colors.white,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
+        selectedItemColor: Colors.deepOrange,
+        unselectedItemColor: Colors.black,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.public),
+            label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Find',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorite',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: 'Account',
+          ),
+        ],
       ),
     );
   }
