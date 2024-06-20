@@ -1,52 +1,23 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'Chatpage.dart';
 
 class ConsultantsPage extends StatelessWidget {
-  ConsultantsPage({Key? key});
+  ConsultantsPage({Key? key}) : super(key: key);
 
-  final List<String> titles = [
-    'John Wick',
-    'Robert J.',
-    'James Gunn',
-    'Ricky Tales',
-    'Micky Mose',
-    'Pick War',
-    'Leg Piece',
-    'Apple Mac',
-  ];
+  Future<List<dynamic>> fetchConsultants() async {
+    final response = await http.get(
+      Uri.parse('https://syfer001testing.000webhostapp.com/cloneapi/consultantshdata.php'),
+    );
 
-  final List<String> imagePaths = [
-    'assets/a.png',
-    'assets/b.png',
-    'assets/c.png',
-    'assets/d.png',
-    'assets/e.png',
-    'assets/f.png',
-    'assets/g.png',
-    'assets/h.png',
-  ];
-
-  final List<String> subtitles = [
-    'mailto:jon.wick@gmail.com',
-    'mailto:robert.j@gmail.com',
-    'mailto:james.gunn@gmail.com',
-    'mailto:ricky.tales@gmail.com',
-    'mailto:micky.mose@gmail.com',
-    'mailto:pick.war@gmail.com',
-    'mailto:leg.piece@gmail.com',
-    'mailto:apple.mac@gmail.com',
-  ];
-
-  final List<String> phoneNumbers = [
-    '+1234567890',
-    '+2345678901',
-    '+3456789012',
-    '+4567890123',
-    '+5678901234',
-    '+6789012345',
-    '+7890123456',
-    '+8901234567',
-  ];
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      return jsonData['data'];
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,42 +25,59 @@ class ConsultantsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Consultants'),
       ),
-      body: ListView.builder(
-        itemCount: imagePaths.length,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: const EdgeInsets.all(10),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(10),
-              leading: Image.asset(
-                imagePaths[index],
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-              ),
-              title: Text(titles[index]),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(subtitles[index]),
-                  Text(phoneNumbers[index]),
-                ],
-              ),
-              trailing: const Icon(Icons.arrow_forward),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatPage(
-                      consultantName: titles[index],
-                      consultantImage: imagePaths[index],
-                      consultantPhoneNumber: phoneNumbers[index], // Pass phone number
+      body: FutureBuilder<List<dynamic>>(
+        future: fetchConsultants(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No consultants found'));
+          } else {
+            final consultants = snapshot.data!;
+            return ListView.builder(
+              itemCount: consultants.length,
+              itemBuilder: (context, index) {
+                final consultant = consultants[index];
+                return Card(
+                  margin: const EdgeInsets.all(10),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(10),
+                    leading: Image.asset(
+                      'assets/${consultant['Concultants_Image']}',
+                      width: 50,
+                      height: 50,
+
+                      fit: BoxFit.cover,
+
                     ),
+                    title: Text(consultant['Concultants_name']),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('mailto:${consultant['Concultants_email']}'),
+                        Text(consultant['Consultant_phone']),
+                      ],
+                    ),
+                    trailing: const Icon(Icons.arrow_forward),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(
+                            consultantName: consultant['Concultants_name'],
+                            consultantImage: 'assets/${consultant['Concultants_Image']}',
+                            consultantPhoneNumber: consultant['Consultant_phone'],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 );
               },
-            ),
-          );
+            );
+          }
         },
       ),
     );
