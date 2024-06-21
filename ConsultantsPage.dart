@@ -1,21 +1,56 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'Chatpage.dart';
+import 'dart:convert';
 
-class ConsultantsPage extends StatelessWidget {
+class Consultant {
+  final String name;
+  final String email;
+  final String imagePath;
+  final String phone;
+
+  Consultant({
+    required this.name,
+    required this.email,
+    required this.imagePath,
+    required this.phone,
+  });
+
+  factory Consultant.fromJson(Map<String, dynamic> json) {
+    return Consultant(
+      name: json['Concultants_name'],
+      email: json['Concultants_email'],
+      imagePath: json['Concultants_imagepath'],
+      phone: json['Consultant_phone'],
+    );
+  }
+}
+
+class ConsultantsPage extends StatefulWidget {
   ConsultantsPage({Key? key}) : super(key: key);
 
-  Future<List<dynamic>> fetchConsultants() async {
-    final response = await http.get(
-      Uri.parse('https://syfer001testing.000webhostapp.com/cloneapi/consultantshdata.php'),
-    );
+  @override
+  _ConsultantsPageState createState() => _ConsultantsPageState();
+}
+
+class _ConsultantsPageState extends State<ConsultantsPage> {
+  late Future<List<Consultant>> futureConsultants;
+
+  @override
+  void initState() {
+    super.initState();
+    futureConsultants = fetchConsultants();
+  }
+
+  Future<List<Consultant>> fetchConsultants() async {
+    final response = await http.get(Uri.parse('https://syfer001testing.000webhostapp.com/cloneapi/consultantshdata.php'));
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      return jsonData['data'];
+      final List<dynamic> consultantsData = jsonData['data'];
+
+      return consultantsData.map((json) => Consultant.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to load data');
+      throw Exception('Failed to load consultants');
     }
   }
 
@@ -25,8 +60,8 @@ class ConsultantsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Consultants'),
       ),
-      body: FutureBuilder<List<dynamic>>(
-        future: fetchConsultants(),
+      body: FutureBuilder<List<Consultant>>(
+        future: futureConsultants,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -44,20 +79,18 @@ class ConsultantsPage extends StatelessWidget {
                   margin: const EdgeInsets.all(10),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(10),
-                    leading: Image.asset(
-                      'assets/${consultant['Concultants_Image']}',
+                    leading: Image.network(
+                      'https://syfer001testing.000webhostapp.com/cloneapi/${consultant.imagePath}',
                       width: 50,
                       height: 50,
-
                       fit: BoxFit.cover,
-
                     ),
-                    title: Text(consultant['Concultants_name']),
+                    title: Text(consultant.name),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('mailto:${consultant['Concultants_email']}'),
-                        Text(consultant['Consultant_phone']),
+                        Text(consultant.email),
+                        Text(consultant.phone),
                       ],
                     ),
                     trailing: const Icon(Icons.arrow_forward),
@@ -66,9 +99,9 @@ class ConsultantsPage extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ChatPage(
-                            consultantName: consultant['Concultants_name'],
-                            consultantImage: 'assets/${consultant['Concultants_Image']}',
-                            consultantPhoneNumber: consultant['Consultant_phone'],
+                            consultantName: consultant.name,
+                            consultantImage: 'https://syfer001testing.000webhostapp.com/cloneapi/${consultant.imagePath}',
+                            consultantPhoneNumber: consultant.phone,
                           ),
                         ),
                       );
@@ -79,6 +112,35 @@ class ConsultantsPage extends StatelessWidget {
             );
           }
         },
+      ),
+    );
+  }
+}
+
+class ChatPage extends StatelessWidget {
+  final String consultantName;
+  final String consultantImage;
+  final String consultantPhoneNumber;
+
+  ChatPage({
+    required this.consultantName,
+    required this.consultantImage,
+    required this.consultantPhoneNumber,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(consultantName),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            Image.network(consultantImage),
+            Text(consultantPhoneNumber),
+          ],
+        ),
       ),
     );
   }
